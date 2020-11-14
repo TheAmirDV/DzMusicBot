@@ -2,8 +2,9 @@ const Discord = require('discord.js')
 
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
-const { token , Youtube_API} = require('./config.json')
+//const { token} = require('./config.json')
 
+const { Youtube_API } = require('./config.json')
 const WOKCommands = require('wokcommands')
 
 const Util = require('discord.js')
@@ -763,7 +764,7 @@ if(ReactedMessage.id === EmbedMessageId) {
 })
 
 
-client.login(token)
+client.login(process.env.DJS_TOKEN)
 
 
 

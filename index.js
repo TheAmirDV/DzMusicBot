@@ -124,7 +124,7 @@ await mongo().then(async (mongoose) => {
 
             try {
 
-                var video = await youtube.getVideo(url)
+                var video = await youtube.getVideoByID(url)
 
             } catch {
 

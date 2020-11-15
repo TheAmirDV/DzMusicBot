@@ -71,7 +71,10 @@ await mongo().then(async (mongoose) => {
 
 
     
-    if(message.author.bot) return
+    if(message.author.bot) {
+        message.delete( { timeout : 1000 })
+        return
+    }
 
     if(message.channel.id === ChannelId){
 

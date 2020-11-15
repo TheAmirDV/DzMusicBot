@@ -4,7 +4,6 @@ const client = new Discord.Client()
 
 //const { token} = require('./config.json')
 
-const { Youtube_API } = require('./config.json')
 const WOKCommands = require('wokcommands')
 
 const Util = require('discord.js')
@@ -23,7 +22,7 @@ const Youtube = require('simple-youtube-api');
 const { util } = require('simple-youtube-api');
 const { splice } = require('wokcommands/permissions');
 
-const youtube = new Youtube(Youtube_API)
+const youtube = new Youtube(process.env.YT_API)
 
 client.once('ready', () => {
 

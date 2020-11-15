@@ -1,6 +1,6 @@
 const Discord = require('discord.js')
 
-const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const client = new Discord.Client()
 
 //const { token} = require('./config.json')
 
@@ -63,8 +63,8 @@ await mongo().then(async (mongoose) => {
     })
 
     if(!result) {
-        return undefined
-    } else if (result) {
+        return
+    }
 
     const ChannelId = await result[0].CChannelId
     const EmbedMessageId = await result[0].EmbedMessageID
@@ -134,8 +134,7 @@ await mongo().then(async (mongoose) => {
                     var video = await youtube.getVideoByID(videos[0].id)
 
                 } catch {
-                    message.channel.send(videos)
-                    message.channel.send(video)
+                   
                     const NoMatch = new Discord.MessageEmbed()
                     .setAuthor(`No Match`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
                     .setTimestamp()
@@ -504,7 +503,6 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
 
 
 
-    }
     
 
 

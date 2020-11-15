@@ -71,9 +71,7 @@ await mongo().then(async (mongoose) => {
 
 
     
-    if(message.author.bot) {
-        message.delete
-    }
+    if(message.author.bot) return
 
     if(message.channel.id === ChannelId){
 
@@ -84,7 +82,7 @@ await mongo().then(async (mongoose) => {
         
         
 
-        message.delete()
+        message.delete( { timeout : 1000 })
         
         
         
@@ -641,8 +639,7 @@ client.on('messageReactionAdd', async(messageReaction, user,) => {
     const minimum = 0
     const RandomNumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum
 
-    const serverQueue = queue.get(messageReaction.message.guild.id)
-    const Split = serverQueue.volume
+    
 
     const member = messageReaction.message.guild.member(user)  
 
@@ -656,7 +653,8 @@ client.on('messageReactionAdd', async(messageReaction, user,) => {
             if(!result) {
                 return
             }
-
+            const serverQueue = queue.get(messageReaction.message.guild.id)
+            const Split = serverQueue.volume
             const EmbedMessageId = await result[0].EmbedMessageID
 
             if (user.bot) return; // Returns When A Bot Reacted

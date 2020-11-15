@@ -130,8 +130,8 @@ await mongo().then(async (mongoose) => {
                     var videos = await youtube.searchVideos(searchString, 1)
                     var video = await youtube.getVideoByID(videos[0].id)
 
-                } catch {
-                   
+                } catch (err) {
+                    console.log(err)
                     const NoMatch = new Discord.MessageEmbed()
                     .setAuthor(`No Match`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
                     .setTimestamp()

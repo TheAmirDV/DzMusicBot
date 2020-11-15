@@ -848,9 +848,10 @@ if (emoji === '⏭️') {
         return
     }
     if(serverQueue) {
-        if(serverQueue.volume < 200) {
             messageReaction.users.remove(user.id)
-            serverQueue.volume = serverQueue.volume + 10
+            if(serverQueue.volume == 200) return;
+            if(serverQueue.volume + 10 >= 200) serverQueue.volume = 200;
+            else serverQueue.volume = serverQueue.volume + 10;
             serverQueue.connection.dispatcher.setVolume(serverQueue.volume / 100)
             const Volume = new Discord.MessageEmbed()
             .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
@@ -859,7 +860,7 @@ if (emoji === '⏭️') {
             .setDescription(`Changed Volume To : **${serverQueue.volume}**`)
             messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
-        }
+        
     }
     
 
@@ -886,10 +887,10 @@ if (emoji === '⏭️') {
         return
     }
     if(serverQueue) {
-        
-        if(serverQueue.volume > 0) {
-            messageReaction.users.remove(user.id)
-            serverQueue.volume = serverQueue.volume + 10
+        messageReaction.users.remove(user.id)
+        if(serverQueue.volume == 0) return;
+        if(serverQueue.volume - 10 <= 0 ) serverQueue.volume = 0
+        else serverQueue.volume = serverQueue.volume - 10;
             serverQueue.connection.dispatcher.setVolume(serverQueue.volume / 100)
             const Volume = new Discord.MessageEmbed()
             .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
@@ -898,7 +899,7 @@ if (emoji === '⏭️') {
             .setDescription(`Changed Volume To : **${serverQueue.volume}**`)
             messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
-        }
+        
     }
     
     

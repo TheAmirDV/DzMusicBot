@@ -651,8 +651,7 @@ client.on('messageReactionAdd', async(messageReaction, user,) => {
             })
 
             const serverQueue = queue.get(messageReaction.message.guild.id)
-           
-            
+
             
 
 
@@ -665,6 +664,8 @@ if (messageReaction) {
 // if the reaction exists what gonna happen no emojis matter
 }
 if(ReactedMessage.id === EmbedMessageId) {
+
+
 
 if (emoji === '⏭️') {
 
@@ -846,20 +847,23 @@ if (emoji === '⏭️') {
         messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
         return
     }
-    const Split = serverQueue.volume
-    if(Split < 200) {
+    if(serverQueue) {
+        const Split = serverQueue.volume
+        if(Split < 200) {
 
-        Split = Split + 10
-        serverQueue.volume = Split
-        serverQueue.connection.dispatcher.setVolume(Split / 100)
-        const Volume = new Discord.MessageEmbed()
-        .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`Changed Volume To : **${Split}**`)
-        messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return undefined
+            Split = Split + 10
+            serverQueue.volume = Split
+            serverQueue.connection.dispatcher.setVolume(Split / 100)
+            const Volume = new Discord.MessageEmbed()
+            .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`Changed Volume To : **${Split}**`)
+            messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return undefined
+        }
     }
+    
 
 } else if (emoji === '🔉') {
 
@@ -883,20 +887,23 @@ if (emoji === '⏭️') {
         messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
         return
     }
-    const Split = serverQueue.volume
-    if(Split > 0) {
+    if(serverQueue) {
+        const Split = serverQueue.volume
+        if(Split > 0) {
 
-        Split = Split - 10
-        serverQueue.volume = Split
-        serverQueue.connection.dispatcher.setVolume(Split / 100)
-        const Volume = new Discord.MessageEmbed()
-        .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`Changed Volume To : **${Split}**`)
-        messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return undefined
+            Split = Split - 10
+            serverQueue.volume = Split
+            serverQueue.connection.dispatcher.setVolume(Split / 100)
+            const Volume = new Discord.MessageEmbed()
+            .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`Changed Volume To : **${Split}**`)
+            messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return undefined
+        }
     }
+    
     
 }
 

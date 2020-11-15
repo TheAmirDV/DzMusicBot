@@ -23,7 +23,7 @@ const { util } = require('simple-youtube-api');
 const { splice } = require('wokcommands/permissions');
 
 const youtube = new Youtube(process.env.YT_API)
-)
+
 
 client.once('ready', () => {
 

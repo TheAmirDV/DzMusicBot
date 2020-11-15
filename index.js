@@ -128,7 +128,6 @@ await mongo().then(async (mongoose) => {
                 try {
 
                     var videos = await youtube.searchVideos(searchString, 1)
-                    console.log(videos)
                     var video = await youtube.getVideoByID(videos[0].id)
 
                 } catch {
@@ -779,127 +778,7 @@ if (emoji === '⏭️') {
     messageReaction.message.channel.send(StoppedMusic).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
     return undefined
 
-} else if (emoji === '🔁') {
-
-    if(!member.voice.channel) {
-        messageReaction.users.remove(user.id)
-        const NotJoined = new Discord.MessageEmbed()
-        .setAuthor(`Not Joined!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`You Need To Be Connected To A Voice Channel To Stop Music`)
-        messageReaction.message.channel.send(NotJoined).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return
-    }
-    if(!serverQueue) {
-        messageReaction.users.remove(user.id)
-        const NothingPlaying = new Discord.MessageEmbed()
-        .setAuthor(`Not Playing!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`There Is Nothing Playing!!`)
-        messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return
-    }
-    if(!serverQueue.loop) {
-        messageReaction.users.remove(user.id)
-        serverQueue.loop = !serverQueue.loop
-        const Loop = new Discord.MessageEmbed()
-        .setAuthor(`Enabled Loop!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`I Have Now **Enabled** The Loop.`)
-        messageReaction.message.channel.send(Loop).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return undefined
-    }
-    if(serverQueue.loop) {
-        messageReaction.users.remove(user.id)
-        serverQueue.loop = !serverQueue.loop
-        const Loop = new Discord.MessageEmbed()
-        .setAuthor(`Disabled!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`I Have Now **Disabled** The Loop.`)
-        messageReaction.message.channel.send(Loop).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return undefined
-    }
-    
-
-} else if (emoji === '🔊') {
-
-    if(!member.voice.channel) {
-        messageReaction.users.remove(user.id)
-        const NotJoined = new Discord.MessageEmbed()
-        .setAuthor(`Not Joined!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`You Need To Be Connected To A Voice Channel To Stop Music`)
-        messageReaction.message.channel.send(NotJoined).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return
-    }
-    if(!serverQueue) {
-        messageReaction.users.remove(user.id)
-        const NothingPlaying = new Discord.MessageEmbed()
-        .setAuthor(`Not Playing!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`There Is Nothing Playing!!`)
-        messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return
-    }
-    const Split = serverQueue.volume
-    if(Split < 200) {
-
-        Split = Split + 10
-        serverQueue.volume = Split
-        serverQueue.connection.dispatcher.setVolume(Split / 100)
-        const Volume = new Discord.MessageEmbed()
-        .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`Changed Volume To : **${Split}**`)
-        messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return undefined
-    }
-
-} else if (emoji === '🔉') {
-
-    if(!member.voice.channel) {
-        messageReaction.users.remove(user.id)
-        const NotJoined = new Discord.MessageEmbed()
-        .setAuthor(`Not Joined!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`You Need To Be Connected To A Voice Channel To Stop Music`)
-        messageReaction.message.channel.send(NotJoined).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return
-    }
-    if(!serverQueue) {
-        messageReaction.users.remove(user.id)
-        const NothingPlaying = new Discord.MessageEmbed()
-        .setAuthor(`Not Playing!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`There Is Nothing Playing!!`)
-        messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return
-    }
-    const Split = serverQueue.volume
-    if(Split > 0) {
-
-        Split = Split - 10
-        serverQueue.volume = Split
-        serverQueue.connection.dispatcher.setVolume(Split / 100)
-        const Volume = new Discord.MessageEmbed()
-        .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-        .setTimestamp()
-        .setColor(RandomNumber)
-        .setDescription(`Changed Volume To : **${Split}**`)
-        messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-        return undefined
-    }
-    
-}
+} 
 
 
 }

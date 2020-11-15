@@ -849,10 +849,9 @@ if (emoji === '⏭️') {
     }
     if(serverQueue) {
         if(serverQueue.volume < 200) {
-
-            Split = Split + 10
-            serverQueue.volume = Split
-            serverQueue.connection.dispatcher.setVolume(Split / 100)
+            messageReaction.users.remove(user.id)
+            serverQueue.volume = serverQueue.volume + 10
+            serverQueue.connection.dispatcher.setVolume(serverQueue.volume / 100)
             const Volume = new Discord.MessageEmbed()
             .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
             .setTimestamp()
@@ -889,10 +888,9 @@ if (emoji === '⏭️') {
     if(serverQueue) {
         
         if(serverQueue.volume > 0) {
-
-            Split = Split - 10
-            serverQueue.volume = Split
-            serverQueue.connection.dispatcher.setVolume(Split / 100)
+            messageReaction.users.remove(user.id)
+            serverQueue.volume = serverQueue.volume + 10
+            serverQueue.connection.dispatcher.setVolume(serverQueue.volume / 100)
             const Volume = new Discord.MessageEmbed()
             .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
             .setTimestamp()

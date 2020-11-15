@@ -47,10 +47,7 @@ client.once('ready', () => {
 
 client.on('message', async message => {
         
-        
 
-    
-    
     
     const maximum = 16777215
     const minimum = 0
@@ -124,13 +121,14 @@ await mongo().then(async (mongoose) => {
 
             try {
 
-                var video = await youtube.getVideoByID(url)
+                var video = await youtube.getVideo(url)
 
             } catch {
 
                 try {
 
-                    var videos = await youtube.searchVideos(searchString, 1) 
+                    var videos = await youtube.searchVideos(searchString, 1)
+                    console.log(videos)
                     var video = await youtube.getVideoByID(videos[0].id)
 
                 } catch {
@@ -653,17 +651,11 @@ client.on('messageReactionAdd', async(messageReaction, user,) => {
                 _id: messageReaction.message.guild.id
             })
 
-            if(!result) {
-                return
-            }
             const serverQueue = queue.get(messageReaction.message.guild.id)
-            if(!serverQueue) {
-                return
-            } 
+           
             
             
 
-            const Split = serverQueue.volume
 
             const EmbedMessageId = await result[0].EmbedMessageID
 
@@ -855,6 +847,7 @@ if (emoji === '⏭️') {
         messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
         return
     }
+    const Split = serverQueue.volume
     if(Split < 200) {
 
         Split = Split + 10
@@ -891,6 +884,7 @@ if (emoji === '⏭️') {
         messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
         return
     }
+    const Split = serverQueue.volume
     if(Split > 0) {
 
         Split = Split - 10

@@ -856,7 +856,7 @@ if (emoji === '⏭️') {
             .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
             .setTimestamp()
             .setColor(RandomNumber)
-            .setDescription(`Changed Volume To : **${Split}**`)
+            .setDescription(`Changed Volume To : **${serverQueue.volume}**`)
             messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
         }
@@ -895,7 +895,7 @@ if (emoji === '⏭️') {
             .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
             .setTimestamp()
             .setColor(RandomNumber)
-            .setDescription(`Changed Volume To : **${Split}**`)
+            .setDescription(`Changed Volume To : **${serverQueue.volume}**`)
             messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
         }

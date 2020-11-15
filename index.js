@@ -640,9 +640,9 @@ client.on('messageReactionAdd', async(messageReaction, user,) => {
     const maximum = 16777215
     const minimum = 0
     const RandomNumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum
-    const Split = serverQueue.volume
 
     const serverQueue = queue.get(messageReaction.message.guild.id)
+    const Split = serverQueue.volume
 
     const member = messageReaction.message.guild.member(user)  
 

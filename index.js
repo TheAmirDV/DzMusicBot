@@ -657,9 +657,12 @@ client.on('messageReactionAdd', async(messageReaction, user,) => {
                 return
             }
             const serverQueue = queue.get(messageReaction.message.guild.id)
-            console.log(`Queue : ${queue.get(messageReaction.message.guild.id)}`)
-            const Split = serverQueue.volume
-            const EmbedMessageId = await result[0].EmbedMessageID
+            if(!serverQueue) {
+                return
+            } else {
+                const Split = serverQueue.volume
+
+                const EmbedMessageId = await result[0].EmbedMessageID
 
             if (user.bot) return; // Returns When A Bot Reacted
   const emoji = messageReaction._emoji.name; // The Emoji That Is On The Reaction
@@ -903,6 +906,11 @@ if(ReactedMessage.id === EmbedMessageId) {
 
 
 }
+
+
+            }
+            
+            
 
 
 

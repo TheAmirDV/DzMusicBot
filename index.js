@@ -144,6 +144,7 @@ await mongo().then(async (mongoose) => {
                 }
 
             }
+
             const song = {
                 thumbnails: video.thumbnails,
                 id: video.id,
@@ -165,7 +166,7 @@ await mongo().then(async (mongoose) => {
                     songs: [],
                     volume: 100,
                     playing: true,
-                    loop: false,
+                    loop: false
                 }
                 queue.set(message.guild.id, queueConstruct)
                 queueConstruct.songs.push(song)

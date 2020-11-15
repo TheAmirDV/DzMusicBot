@@ -21,6 +21,7 @@ const queue = new Map()
 
 const Youtube = require('simple-youtube-api');
 const { util } = require('simple-youtube-api');
+const { splice } = require('wokcommands/permissions');
 
 const youtube = new Youtube(Youtube_API)
 
@@ -38,9 +39,7 @@ client.once('ready', () => {
     .setMongoPath('mongodb+srv://AmirDV:09900051395AmirDV@discordbot.39wl0.mongodb.net/MusicDB?retryWrites=true&w=majority')
     
     
-
-
-
+    
     
 })
 
@@ -64,12 +63,17 @@ await mongo().then(async (mongoose) => {
     })
 
     if(!result) {
-        return
-    }
+        return undefined
+    } else if (result) {
+
     const ChannelId = await result[0].CChannelId
     const EmbedMessageId = await result[0].EmbedMessageID
 
-    if(message.author.bot) return
+
+    
+    if(message.author.bot) {
+        message.delete
+    }
 
     if(message.channel.id === ChannelId){
 
@@ -80,13 +84,13 @@ await mongo().then(async (mongoose) => {
         
         
 
-        message.delete({ timeout : 5000})
+        message.delete()
         
         
         
         
 
-         if (message.content !== 'skip'  &&  message.content !== 'stop' && !message.content.startsWith('volume') && message.content !== 'np' && message.content!== 'resume' && message.content !== 'pause') {
+         if (message.content !== 'skip'  &&  message.content !== 'stop' && !message.content.startsWith('volume') && message.content !== 'np' && message.content!== 'resume' && message.content !== 'pause' && message.content!== 'loop') {
             const voiceChannel = message.member.voice.channel
             if(!voiceChannel) {
                 const NotJoined = new Discord.MessageEmbed()
@@ -120,7 +124,7 @@ await mongo().then(async (mongoose) => {
 
             try {
 
-                var video = await youtube.getVideoByID(url)
+                var video = await youtube.getVideo(url)
 
             } catch {
 
@@ -161,6 +165,7 @@ await mongo().then(async (mongoose) => {
                     songs: [],
                     volume: 100,
                     playing: true,
+                    loop: false,
                 }
                 queue.set(message.guild.id, queueConstruct)
                 queueConstruct.songs.push(song)
@@ -349,12 +354,12 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
                 message.channel.send(NotValid).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
                 return
             }
-            if(Split <= 0 || Split > 200) {
+            if(Split < 0 || Split > 200) {
                 const OutOfRange = new Discord.MessageEmbed()
                 .setAuthor(`Not Valid!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
                 .setTimestamp()
                 .setColor(RandomNumber)
-                .setDescription(`Not A Valid Amount To Change Volume To => 1-200`)
+                .setDescription(`Not A Valid Amount To Change Volume To => 0-200`)
                 message.channel.send(OutOfRange).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
                 return
             }
@@ -463,10 +468,41 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             .setDescription(`Music Is Now Resumed For You.`)
             message.channel.send(Paused).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
+        } else if (message.content === 'loop') {
+            if(!message.member.voice.channel) {
+                const NotJoined = new Discord.MessageEmbed()
+                .setAuthor(`Not Joined!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                .setTimestamp()
+                .setColor(RandomNumber)
+                .setDescription(`You Need To Be Connected To A Voice Channel To Resume Music`)
+                message.channel.send(NotJoined).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                return
+            }
+            if(!serverQueue) {
+                const NothingPlaying = new Discord.MessageEmbed()
+                .setAuthor(`Not Playing!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                .setTimestamp()
+                .setColor(RandomNumber)
+                .setDescription(`There Is Nothing Playing!!`)
+                message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                return
+            }
+            serverQueue.loop = !serverQueue.loop
+            const Loop = new Discord.MessageEmbed()
+            .setAuthor(`Looped!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`I Have Now ${serverQueue.loop ? `**Enabled**` : `**Disabled**`} The Loop.`)
+            message.channel.send(Loop).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return undefined
+
         }
+    }
+
 
 
     }
+    
 
 
 
@@ -474,6 +510,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
 
 
     } finally {
+        console.error();
     }
 
 
@@ -524,7 +561,9 @@ __**QUEUE LIST:**__ \n Join A Voice Channel And Queue Songs By Name Or Url In He
     const dispatcher = serverQueue.connection.play(ytdl(song.url))
     
                 .on('finish', async () => {
-                    await serverQueue.songs.shift()
+                    if (!serverQueue.loop) {
+                        await serverQueue.songs.shift()
+                    }
                     await play(guild, serverQueue.songs[0])
 
                     if(serverQueue.songs[0]) {
@@ -577,7 +616,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
     
     
         } finally {
-    
+            console.error();
         }
     })
     
@@ -601,7 +640,7 @@ client.on('messageReactionAdd', async(messageReaction, user,) => {
     const maximum = 16777215
     const minimum = 0
     const RandomNumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum
-
+    const Split = serverQueue.volume
 
     const serverQueue = queue.get(messageReaction.message.guild.id)
 
@@ -729,6 +768,7 @@ if(ReactedMessage.id === EmbedMessageId) {
             messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return
         }
+        messageReaction.users.remove(user.id)
         serverQueue.songs = []
         serverQueue.connection.dispatcher.end()
         const StoppedMusic = new Discord.MessageEmbed()
@@ -741,13 +781,122 @@ if(ReactedMessage.id === EmbedMessageId) {
 
     } else if (emoji === '🔁') {
 
+        if(!member.voice.channel) {
+            messageReaction.users.remove(user.id)
+            const NotJoined = new Discord.MessageEmbed()
+            .setAuthor(`Not Joined!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`You Need To Be Connected To A Voice Channel To Stop Music`)
+            messageReaction.message.channel.send(NotJoined).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return
+        }
+        if(!serverQueue) {
+            messageReaction.users.remove(user.id)
+            const NothingPlaying = new Discord.MessageEmbed()
+            .setAuthor(`Not Playing!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`There Is Nothing Playing!!`)
+            messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return
+        }
+        if(!serverQueue.loop) {
+            messageReaction.users.remove(user.id)
+            serverQueue.loop = !serverQueue.loop
+            const Loop = new Discord.MessageEmbed()
+            .setAuthor(`Enabled Loop!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`I Have Now **Enabled** The Loop.`)
+            messageReaction.message.channel.send(Loop).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return undefined
+        }
+        if(serverQueue.loop) {
+            messageReaction.users.remove(user.id)
+            serverQueue.loop = !serverQueue.loop
+            const Loop = new Discord.MessageEmbed()
+            .setAuthor(`Disabled!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`I Have Now **Disabled** The Loop.`)
+            messageReaction.message.channel.send(Loop).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return undefined
+        }
+        
 
     } else if (emoji === '🔊') {
 
+        if(!member.voice.channel) {
+            messageReaction.users.remove(user.id)
+            const NotJoined = new Discord.MessageEmbed()
+            .setAuthor(`Not Joined!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`You Need To Be Connected To A Voice Channel To Stop Music`)
+            messageReaction.message.channel.send(NotJoined).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return
+        }
+        if(!serverQueue) {
+            messageReaction.users.remove(user.id)
+            const NothingPlaying = new Discord.MessageEmbed()
+            .setAuthor(`Not Playing!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`There Is Nothing Playing!!`)
+            messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return
+        }
+        if(Split < 200) {
+
+            Split = Split + 10
+            serverQueue.volume = Split
+            serverQueue.connection.dispatcher.setVolume(Split / 100)
+            const Volume = new Discord.MessageEmbed()
+            .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`Changed Volume To : **${Split}**`)
+            messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return undefined
+        }
 
     } else if (emoji === '🔉') {
 
+        if(!member.voice.channel) {
+            messageReaction.users.remove(user.id)
+            const NotJoined = new Discord.MessageEmbed()
+            .setAuthor(`Not Joined!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`You Need To Be Connected To A Voice Channel To Stop Music`)
+            messageReaction.message.channel.send(NotJoined).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return
+        }
+        if(!serverQueue) {
+            messageReaction.users.remove(user.id)
+            const NothingPlaying = new Discord.MessageEmbed()
+            .setAuthor(`Not Playing!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`There Is Nothing Playing!!`)
+            messageReaction.message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return
+        }
+        if(Split > 0) {
 
+            Split = Split - 10
+            serverQueue.volume = Split
+            serverQueue.connection.dispatcher.setVolume(Split / 100)
+            const Volume = new Discord.MessageEmbed()
+            .setAuthor(`Volume`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+            .setTimestamp()
+            .setColor(RandomNumber)
+            .setDescription(`Changed Volume To : **${Split}**`)
+            messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            return undefined
+        }
+        
     }
 
 
@@ -756,7 +905,7 @@ if(ReactedMessage.id === EmbedMessageId) {
 
 
         }finally {
-
+            console.error();
         }
     })
 

@@ -848,8 +848,7 @@ if (emoji === '⏭️') {
         return
     }
     if(serverQueue) {
-        const Split = serverQueue.volume
-        if(Split < 200) {
+        if(serverQueue.volume < 200) {
 
             Split = Split + 10
             serverQueue.volume = Split
@@ -888,8 +887,8 @@ if (emoji === '⏭️') {
         return
     }
     if(serverQueue) {
-        const Split = serverQueue.volume
-        if(Split > 0) {
+        
+        if(serverQueue.volume > 0) {
 
             Split = Split - 10
             serverQueue.volume = Split

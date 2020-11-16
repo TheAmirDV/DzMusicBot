@@ -555,7 +555,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
                 return
             }
                 const Title = serverQueue.songs[0].title
-                Lyrics.find(' ', Title, function(err, resp) {
+                Lyrics.find(Title, Title, function(err, resp) {
 
                     if(!err) {
 

@@ -122,7 +122,7 @@ await mongo().then(async (mongoose) => {
 
             try {
 
-                var video = await youtube.getVideoByID(url)
+                var video = await youtube.getVideo(url)
 
             } catch {
 
@@ -152,8 +152,8 @@ await mongo().then(async (mongoose) => {
                 durationminute : video.duration.minutes,
                 durationhours : video.duration.hours,
             }
-
-            const Thumbnail = song.thumbnails.maxres.url
+            console.log(song.thumbnails)
+            
             
             
             if(!serverQueue) {

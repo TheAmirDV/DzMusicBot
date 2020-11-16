@@ -232,7 +232,7 @@ __**QUEUE LIST:**__ \n ${queueConstruct.songs.map(song => `**-** ${song.title}`)
                         .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
                         .setImage(Thumbnail)
                         .setColor(RandomNumber)
-                        .setFooter(`Music Queue : ${serverQueue.songs.length} | Volume : ${serverQueue.volume} | Prefix : ${MainPrefix}`)
+                        .setFooter(`Music Queue : ${serverQueue.songs.length - 1} | Volume : ${serverQueue.volume} | Prefix : ${MainPrefix}`)
                     await EmbedMessage.edit(`​​                                                                                                                                                        
 __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}`, StartedPlaying)
                         try {
@@ -371,6 +371,43 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             .setColor(RandomNumber)
             .setDescription(`Changed Volume To : **${Split}**`)
             message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+
+            var videourl = await youtube.getVideo(serverQueue.songs[0].url)
+            const Music = {
+                title: Util.escapeMarkdown(videourl.title),
+                url: videourl.url,
+                thumbnails: videourl.thumbnails,
+                durationsecond : videourl.duration.seconds,
+                durationminute : videourl.duration.minutes,
+                durationhours : videourl.duration.hours,
+            }
+            const Thumbnail = Music.thumbnails.maxres.url
+                          
+
+                message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
+                    const StartedPlaying = new Discord.MessageEmbed()
+                        .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
+                        .setImage(Thumbnail)
+                        .setColor(RandomNumber)
+                        .setFooter(`Music Queue : ${serverQueue.songs.length - 1} | Volume : ${serverQueue.volume} | Prefix : ${MainPrefix}`)
+                    await EmbedMessage.edit(`​​                                                                                                                                                        
+__**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}`, StartedPlaying)
+                        try {
+
+                            await EmbedMessage.react('⏯️'),
+                            await EmbedMessage.react('⏹️'),
+                            await EmbedMessage.react('⏭️'),
+                            await EmbedMessage.react('🔁'),
+                            await EmbedMessage.react('🔊'),
+                            await EmbedMessage.react('🔉')
+
+
+                        } catch (error) {
+                            console.log(error)
+                        }
+                })
+
+
             return undefined
             
         } else if (message.content === 'np') {
@@ -584,7 +621,8 @@ __**QUEUE LIST:**__ \n Join A Voice Channel And Queue Songs By Name Or Url In He
                                     .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
                                     .setImage(Thumbnail)
                                     .setColor(RandomNumber)
-                                await EmbedMessage.edit(`​​                                                                                                                                                        
+                                    .setFooter(`Music Queue : ${serverQueue.songs.length - 1} | Volume : ${serverQueue.volume} | Prefix : ${MainPrefix}`)
+                                    await EmbedMessage.edit(`​​                                                                                                                                                        
 __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}`, StartedPlaying)
                                     try {
                                         
@@ -860,6 +898,45 @@ if (emoji === '⏭️') {
             .setColor(RandomNumber)
             .setDescription(`Changed Volume To : **${serverQueue.volume}**`)
             messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            
+            var videourl = await youtube.getVideo(serverQueue.songs[0].url)
+            const Music = {
+                title: Util.escapeMarkdown(videourl.title),
+                url: videourl.url,
+                thumbnails: videourl.thumbnails,
+                durationsecond : videourl.duration.seconds,
+                durationminute : videourl.duration.minutes,
+                durationhours : videourl.duration.hours,
+            }
+            const Thumbnail = Music.thumbnails.maxres.url
+                          
+
+
+                messageReaction.message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
+                    const StartedPlaying = new Discord.MessageEmbed()
+                        .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
+                        .setImage(Thumbnail)
+                        .setColor(RandomNumber)
+                        .setFooter(`Music Queue : ${serverQueue.songs.length - 1} | Volume : ${serverQueue.volume} | Prefix : ${MainPrefix}`)
+                    await EmbedMessage.edit(`​​                                                                                                                                                        
+__**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}`, StartedPlaying)
+                        try {
+
+                            await EmbedMessage.react('⏯️'),
+                            await EmbedMessage.react('⏹️'),
+                            await EmbedMessage.react('⏭️'),
+                            await EmbedMessage.react('🔁'),
+                            await EmbedMessage.react('🔊'),
+                            await EmbedMessage.react('🔉')
+
+
+                        } catch (error) {
+                            console.log(error)
+                        }
+                })
+            
+            
+            
             return undefined
         
     }
@@ -899,6 +976,46 @@ if (emoji === '⏭️') {
             .setColor(RandomNumber)
             .setDescription(`Changed Volume To : **${serverQueue.volume}**`)
             messageReaction.message.channel.send(Volume).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+            
+            var videourl = await youtube.getVideo(serverQueue.songs[0].url)
+            const Music = {
+                title: Util.escapeMarkdown(videourl.title),
+                url: videourl.url,
+                thumbnails: videourl.thumbnails,
+                durationsecond : videourl.duration.seconds,
+                durationminute : videourl.duration.minutes,
+                durationhours : videourl.duration.hours,
+            }
+            const Thumbnail = Music.thumbnails.maxres.url
+                          
+
+
+                messageReaction.message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
+                    const StartedPlaying = new Discord.MessageEmbed()
+                        .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
+                        .setImage(Thumbnail)
+                        .setColor(RandomNumber)
+                        .setFooter(`Music Queue : ${serverQueue.songs.length - 1} | Volume : ${serverQueue.volume} | Prefix : ${MainPrefix}`)
+                    await EmbedMessage.edit(`​​                                                                                                                                                        
+__**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).join('\n')}`, StartedPlaying)
+                        try {
+
+                            await EmbedMessage.react('⏯️'),
+                            await EmbedMessage.react('⏹️'),
+                            await EmbedMessage.react('⏭️'),
+                            await EmbedMessage.react('🔁'),
+                            await EmbedMessage.react('🔊'),
+                            await EmbedMessage.react('🔉')
+
+
+                        } catch (error) {
+                            console.log(error)
+                        }
+                })
+            
+            
+            
+            
             return undefined
         
     }

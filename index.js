@@ -4,6 +4,8 @@ const client = new Discord.Client()
 
 //const { token} = require('./config.json')
 
+const Lyrics = require('findthelyrics')
+
 const WOKCommands = require('wokcommands')
 
 const Util = require('discord.js')
@@ -85,8 +87,7 @@ await mongo().then(async (mongoose) => {
         message.delete( { timeout : 1000 })
         
         
-
-         if (message.content.toLowerCase() !== 'skip'  &&  message.content.toLowerCase() !== 'stop' && !message.content.toLowerCase().startsWith('volume') && message.content.toLowerCase() !== 'np' && message.content.toLowerCase() !== 'resume' && message.content.toLowerCase() !== 'pause' && message.content.toLowerCase() !== 'loop') {
+         if (message.content.toLowerCase() !== 'skip'  &&  message.content.toLowerCase() !== 'stop' && !message.content.toLowerCase().startsWith('volume') && message.content.toLowerCase() !== 'np' && message.content.toLowerCase() !== 'resume' && message.content.toLowerCase() !== 'pause' && message.content.toLowerCase() !== 'loop' && message.content.toLowerCase() !== 'lyrics') {
             const voiceChannel = message.member.voice.channel
             if(!voiceChannel) {
                 const NotJoined = new Discord.MessageEmbed()
@@ -503,6 +504,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             .setDescription(`Music Is Now Resumed For You.`)
             message.channel.send(Paused).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
+
         } else if (message.content.toLowerCase() === 'loop') {
             if(!message.member.voice.channel) {
                 const NotJoined = new Discord.MessageEmbed()
@@ -531,6 +533,57 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             message.channel.send(Loop).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
 
+        } else if (message.content.toLowerCase() === "lyrics") {
+
+
+            if(!message.member.voice.channel) {
+                const NotJoined = new Discord.MessageEmbed()
+                .setAuthor(`Not Joined!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                .setTimestamp()
+                .setColor(RandomNumber)
+                .setDescription(`You Need To Be Connected To A Voice Channel To See Lyrics`)
+                message.channel.send(NotJoined).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                return
+            }
+            if(!serverQueue) {
+                const NothingPlaying = new Discord.MessageEmbed()
+                .setAuthor(`Not Playing!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                .setTimestamp()
+                .setColor(RandomNumber)
+                .setDescription(`There Is Nothing Playing!!`)
+                message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                return
+            }
+                const Title = serverQueue.songs[0].title
+                Lyrics.find(' ', Title, function(err, resp) {
+
+                    if(!err) {
+
+                        try {
+
+                            const Lyrics = new Discord.MessageEmbed()
+                            .setAuthor(`Lyrics For ${serverQueue.songs[0].title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                            .setTimestamp()
+                            .setColor(RandomNumber)
+                            .setDescription(`${resp}`)
+                            message.author.send(Lyrics)
+                            return
+
+                        } catch (error) {
+                            const ClosedDm = new Discord.MessageEmbed()
+                            .setAuthor(`Failed!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                            .setTimestamp()
+                            .setColor(RandomNumber)
+                            .setDescription(`Couldn't Send **DM** , Plz Open Your Direct Messages And Try Again!`)
+                            message.channel.send(ClosedDm).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                            return
+                        }
+                        
+                    } else {
+                        console.log(err)
+                        return
+                    }
+                })      
         }
     }
 

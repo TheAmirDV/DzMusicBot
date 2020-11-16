@@ -86,7 +86,7 @@ await mongo().then(async (mongoose) => {
         
         
 
-         if (message.content.toLowerCase() !== 'skip'  &&  message.content.toLowerCase() !== 'stop' && !message.content.startsWith('volume'.toLowerCase()) && message.content.toLowerCase() !== 'np' && message.content.toLowerCase() !== 'resume' && message.content.toLowerCase() !== 'pause' && message.content.toLowerCase() !== 'loop') {
+         if (message.content.toLowerCase() !== 'skip'  &&  message.content.toLowerCase() !== 'stop' && !message.content.startsWith(('volume').toLowerCase) && message.content.toLowerCase() !== 'np' && message.content.toLowerCase() !== 'resume' && message.content.toLowerCase() !== 'pause' && message.content.toLowerCase() !== 'loop') {
             const voiceChannel = message.member.voice.channel
             if(!voiceChannel) {
                 const NotJoined = new Discord.MessageEmbed()

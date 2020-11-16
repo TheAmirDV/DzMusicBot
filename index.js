@@ -86,7 +86,7 @@ await mongo().then(async (mongoose) => {
         
         
 
-         if (message.content.toLowerCase() !== 'skip'  &&  message.content.toLowerCase() !== 'stop' && !message.content.startsWith(('volume').toLowerCase) && message.content.toLowerCase() !== 'np' && message.content.toLowerCase() !== 'resume' && message.content.toLowerCase() !== 'pause' && message.content.toLowerCase() !== 'loop') {
+         if (message.content.toLowerCase() !== 'skip'  &&  message.content.toLowerCase() !== 'stop' && !message.content.toLowerCase().startsWith('volume') && message.content.toLowerCase() !== 'np' && message.content.toLowerCase() !== 'resume' && message.content.toLowerCase() !== 'pause' && message.content.toLowerCase() !== 'loop') {
             const voiceChannel = message.member.voice.channel
             if(!voiceChannel) {
                 const NotJoined = new Discord.MessageEmbed()
@@ -311,7 +311,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             message.channel.send(StoppedMusic).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
 
-        } else if (message.content.startsWith('volume'.toLowerCase())) {
+        } else if (message.content.toLowerCase().startsWith('volume')) {
 
             const Split = args.split(' ')
             Split.shift()

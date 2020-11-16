@@ -176,7 +176,7 @@ await mongo().then(async (mongoose) => {
                         const StartedPlaying = new Discord.MessageEmbed()
                             .setAuthor(`[ ${song.durationhours} : ${song.durationminute} : ${song.durationsecond} ] - ${song.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${song.url}`)
                             .setColor(RandomNumber)
-                            .setImage(Thumbnail)
+                            //.setImage(Thumbnail)
                             .setFooter(`Music Queue : ${queueConstruct.songs.length - 1} | Volume : ${queueConstruct.volume} | Prefix : ${MainPrefix}`)
                         await EmbedMessage.edit(`​​                                                                                                                                                        
 __**QUEUE LIST:**__ \n ${queueConstruct.songs.map(song => `**-** ${song.title}`).join('\n')}`, StartedPlaying)

@@ -85,10 +85,8 @@ await mongo().then(async (mongoose) => {
         message.delete( { timeout : 1000 })
         
         
-        
-        
 
-         if (message.content !== 'skip'  &&  message.content !== 'stop' && !message.content.startsWith('volume') && message.content !== 'np' && message.content!== 'resume' && message.content !== 'pause' && message.content!== 'loop') {
+         if (message.content.toLowerCase() !== 'skip'  &&  message.content.toLowerCase() !== 'stop' && !message.content.startsWith('volume'.toLowerCase()) && message.content.toLowerCase() !== 'np' && message.content.toLowerCase() !== 'resume' && message.content.toLowerCase() !== 'pause' && message.content.toLowerCase() !== 'loop') {
             const voiceChannel = message.member.voice.channel
             if(!voiceChannel) {
                 const NotJoined = new Discord.MessageEmbed()
@@ -154,7 +152,6 @@ await mongo().then(async (mongoose) => {
             }
 
             const Thumbnail = song.thumbnails.high.url
-            
             
             if(!serverQueue) {
                 const queueConstruct = {
@@ -230,7 +227,7 @@ __**QUEUE LIST:**__ \n ${queueConstruct.songs.map(song => `**-** ${song.title}`)
 
                 message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
                     const StartedPlaying = new Discord.MessageEmbed()
-                        .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
+                        .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] - ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
                         .setImage(Thumbnail)
                         .setColor(RandomNumber)
                         .setFooter(`Music Queue : ${serverQueue.songs.length - 1} | Volume : ${serverQueue.volume} | Prefix : ${MainPrefix}`)
@@ -255,7 +252,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             }
             return undefined
    
-        } else if(message.content === "skip") {
+        } else if(message.content.toLowerCase() === "skip") {
 
             if(!message.member.voice.channel) {
                 const NotJoined = new Discord.MessageEmbed()
@@ -284,7 +281,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             message.channel.send(SkippedMusic).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
 
-        } else if(message.content === "stop"){
+        } else if(message.content.toLowerCase() === "stop"){
 
             if(!message.member.voice.channel) {
                 const NotJoined = new Discord.MessageEmbed()
@@ -314,7 +311,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             message.channel.send(StoppedMusic).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
 
-        } else if (message.content.startsWith('volume')) {
+        } else if (message.content.startsWith('volume'.toLowerCase())) {
 
             const Split = args.split(' ')
             Split.shift()
@@ -336,7 +333,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
                 message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
                 return
             }
-            if (message.content === 'volume') {
+            if (message.content.toLowerCase() === 'volume') {
                 const Volume = new Discord.MessageEmbed()
                 .setAuthor(`Volume!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
                 .setTimestamp()
@@ -411,7 +408,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
 
             return undefined
             
-        } else if (message.content === 'np') {
+        } else if (message.content.toLowerCase() === 'np') {
             if(!serverQueue) {
                 const NothingPlaying = new Discord.MessageEmbed()
                 .setAuthor(`Not Playing!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
@@ -429,7 +426,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             message.channel.send(Np).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
 
-        } else if(message.content === "pause"){
+        } else if(message.content.toLowerCase() === "pause"){
 
             if(!message.member.voice.channel) {
                 const NotJoined = new Discord.MessageEmbed()
@@ -468,7 +465,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             message.channel.send(Paused).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
 
-        } else if(message.content === "resume"){
+        } else if(message.content.toLowerCase() === "resume"){
 
             if(!message.member.voice.channel) {
                 const NotJoined = new Discord.MessageEmbed()
@@ -506,7 +503,7 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             .setDescription(`Music Is Now Resumed For You.`)
             message.channel.send(Paused).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
             return undefined
-        } else if (message.content === 'loop') {
+        } else if (message.content.toLowerCase() === 'loop') {
             if(!message.member.voice.channel) {
                 const NotJoined = new Discord.MessageEmbed()
                 .setAuthor(`Not Joined!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')

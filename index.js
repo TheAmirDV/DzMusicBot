@@ -575,10 +575,12 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
                 try {
 
                     const LyricsText = new Discord.MessageEmbed()
-                    .setAuthor(`Lyrics For ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                    .setAuthor(`Lyrics`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
                     .setTimestamp()
                     .setColor(RandomNumber)
-                    .setDescription(Lyrics)
+                    .addFields(
+                        { name: `${Music.title}` , value: `${Lyrics}`}
+                    )
                     message.author.send(LyricsText)
 
                 } catch {

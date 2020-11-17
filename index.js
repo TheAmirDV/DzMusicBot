@@ -579,14 +579,9 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
                     .setTimestamp()
                     .setColor(RandomNumber)
                     .setDescription(Lyrics)
-                    if(LyricsText.setDescription.length >= 2048) {
-                        LyricsText.description = `${LyricsText.description.substr(0, 2045)}...`;
-                        message.author.send(LyricsText)
-                        return
-                    } else {
-                        message.author.send(LyricsText)
-                    }
-
+                    if (LyricsText.description.length >= 2048)
+                    LyricsText.description = `${LyricsText.description.substr(0, 2045)}...`;
+                    return message.author.send(LyricsText).catch(console.error);
 
                 } catch {
 

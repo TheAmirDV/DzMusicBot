@@ -174,12 +174,22 @@ await mongo().then(async (mongoose) => {
                     queueConstruct.connection = connection
                     play(message.guild, queueConstruct.songs[0])
                     message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
-                        const StartedPlaying = new Discord.MessageEmbed()
+                        if(!EmbedMessage) {
+                            const Error = new Discord.MessageEmbed()
+                            .setAuthor(`An Error Occured`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                            .setTimestamp()
+                            .setColor(RandomNumber)
+                            .setDescription(`Couldn't Find The **Playing Embed Message** \n Plz Delete The Channel Use **Setup** Command Again`)
+                             message.channel.send(Error).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                             return
+                        }
+
+                            const StartedPlaying = new Discord.MessageEmbed()
                             .setAuthor(`[ ${song.durationhours} : ${song.durationminute} : ${song.durationsecond} ] - ${song.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${song.url}`)
                             .setColor(RandomNumber)
                             .setImage(Thumbnail)
                             .setFooter(`Music Queue : ${queueConstruct.songs.length - 1} | Volume : ${queueConstruct.volume} | Prefix : ${MainPrefix}`)
-                        await EmbedMessage.edit(`​​                                                                                                                                                        
+                            await EmbedMessage.edit(`​​                                                                                                                                                        
 __**QUEUE LIST:**__ \n ${queueConstruct.songs.map(song => `**-** ${song.title}`).join('\n')}`, StartedPlaying)
                             try {
                                     await EmbedMessage.react('⏯️'),
@@ -230,6 +240,16 @@ __**QUEUE LIST:**__ \n ${queueConstruct.songs.map(song => `**-** ${song.title}`)
                 message.channel.send(AddedToQueue).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
 
                 message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
+
+                    if(!EmbedMessage) {
+                        const Error = new Discord.MessageEmbed()
+                        .setAuthor(`An Error Occured`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                        .setTimestamp()
+                        .setColor(RandomNumber)
+                        .setDescription(`Couldn't Find The **Playing Embed Message** \n Plz Delete The Channel Use **Setup** Command Again`)
+                         message.channel.send(Error).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                         return
+                    }
                     const StartedPlaying = new Discord.MessageEmbed()
                         .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] - ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
                         .setImage(Thumbnail)
@@ -387,6 +407,15 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
                           
 
                 message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
+                    if(!EmbedMessage) {
+                        const Error = new Discord.MessageEmbed()
+                        .setAuthor(`An Error Occured`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                        .setTimestamp()
+                        .setColor(RandomNumber)
+                        .setDescription(`Couldn't Find The **Playing Embed Message** \n Plz Delete The Channel Use **Setup** Command Again`)
+                         message.channel.send(Error).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                         return
+                    }
                     const StartedPlaying = new Discord.MessageEmbed()
                         .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
                         .setImage(Thumbnail)
@@ -567,34 +596,11 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
                 durationhours : videourl.duration.hours,
                 artist: videourl.channel.title
             }
-            const Lyrics = await LyricsFinder(Music.artist , serverQueue.songs[0].title)
-            
-            if(Lyrics) {
-
-
-                try {
-
-                    const LyricsText = new Discord.MessageEmbed()
-                    .setTitle(`${serverQueue.songs[0].title} - Lyrics`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-                    .setTimestamp()
-                    .setColor(RandomNumber)
-                    .setDescription(Lyrics)
-                    if (LyricsText.description.length >= 2048)
-                    LyricsText.description = `${LyricsText.description.substr(0, 2045)}...`;
-                    return message.author.send(LyricsText).catch(console.error);
-
-                } catch {
-
-                    const LyricsTextNF = new Discord.MessageEmbed()
-                    .setAuthor(`DM Closed`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-                    .setTimestamp()
-                    .setColor(RandomNumber)
-                    .setDescription(`Your **DM**s Are Disabled , Enabled Your Direct Messages To Receive Lyrics`)
-                    message.channel.send(LyricsTextNF).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-                    return
-                }
-               
-            } else if (!Lyrics) {
+         
+        
+            try {
+                const Lyrics = await LyricsFinder(Music.artist , serverQueue.songs[0].title)
+                if (!Lyrics) {
                 const LyricsTextNF = new Discord.MessageEmbed()
                 .setAuthor(`No Lyrics Found`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
                 .setTimestamp()
@@ -602,16 +608,28 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
                 .setDescription(`No Lyrics Found For The Current Song`)
                 message.channel.send(LyricsTextNF).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
                 return
+                }
+
+                const LyricsText = new Discord.MessageEmbed()
+                .setTitle(`${serverQueue.songs[0].title} - Lyrics`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                .setTimestamp()
+                .setColor(RandomNumber)
+                .setDescription(Lyrics)
+                if (LyricsText.description.length >= 2048)
+                LyricsText.description = `${LyricsText.description.substr(0, 2045)}...`;
+                return message.channel.send(LyricsText).then(NotJoined => NotJoined.delete({ timeout : 10000 })).catch(console.error);
+
+            } catch {
+
             }
+                
 
-
-
-                     
-        }
+               
+                
     }
 
 
-
+}
     
 
 
@@ -644,6 +662,15 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
             serverQueue.voiceChannel.leave()
             queue.delete(guild.id)
             message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
+                if(!EmbedMessage) {
+                    const Error = new Discord.MessageEmbed()
+                    .setAuthor(`An Error Occured`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                    .setTimestamp()
+                    .setColor(RandomNumber)
+                    .setDescription(`Couldn't Find The **Playing Embed Message** \n Plz Delete The Channel Use **Setup** Command Again`)
+                     message.channel.send(Error).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                     return
+                }
                 const StartedPlaying = new Discord.MessageEmbed()
                 .setTitle('No Song Playing Currently')
                 .setDescription(`[Help](https://discord.js/guide) | [Help](https://discord.js/guide)`)
@@ -691,6 +718,15 @@ __**QUEUE LIST:**__ \n Join A Voice Channel And Queue Songs By Name Or Url In He
             
                     
                             message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
+                                if(!EmbedMessage) {
+                                    const Error = new Discord.MessageEmbed()
+                                    .setAuthor(`An Error Occured`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                                    .setTimestamp()
+                                    .setColor(RandomNumber)
+                                    .setDescription(`Couldn't Find The **Playing Embed Message** \n Plz Delete The Channel Use **Setup** Command Again`)
+                                     message.channel.send(Error).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                                     return
+                                }
                                 const StartedPlaying = new Discord.MessageEmbed()
                                     .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
                                     .setImage(Thumbnail)
@@ -985,6 +1021,15 @@ if (emoji === '⏭️') {
 
 
                 messageReaction.message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
+                    if(!EmbedMessage) {
+                        const Error = new Discord.MessageEmbed()
+                        .setAuthor(`An Error Occured`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                        .setTimestamp()
+                        .setColor(RandomNumber)
+                        .setDescription(`Couldn't Find The **Playing Embed Message** \n Plz Delete The Channel Use **Setup** Command Again`)
+                         message.channel.send(Error).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                         return
+                    }
                     const StartedPlaying = new Discord.MessageEmbed()
                         .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
                         .setImage(Thumbnail)
@@ -1063,6 +1108,15 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
 
 
                 messageReaction.message.channel.messages.fetch(EmbedMessageId).then(async EmbedMessage =>{
+                    if(!EmbedMessage) {
+                        const Error = new Discord.MessageEmbed()
+                        .setAuthor(`An Error Occured`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                        .setTimestamp()
+                        .setColor(RandomNumber)
+                        .setDescription(`Couldn't Find The **Playing Embed Message** \n Plz Delete The Channel Use **Setup** Command Again`)
+                         message.channel.send(Error).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                         return
+                    }
                     const StartedPlaying = new Discord.MessageEmbed()
                         .setAuthor(`[ ${Music.durationhours} : ${Music.durationminute} : ${Music.durationsecond} ] ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg', `${Music.url}`)
                         .setImage(Thumbnail)

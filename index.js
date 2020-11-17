@@ -10,6 +10,8 @@ const WOKCommands = require('wokcommands')
 
 const Util = require('discord.js')
 
+const LyricsFinder = require('lyrics-finder')
+
 const mongo = require('./mongo')
 
 const SetupSchema = require('./Schemas/setup-schema');
@@ -150,6 +152,7 @@ await mongo().then(async (mongoose) => {
                 durationsecond : video.duration.seconds,
                 durationminute : video.duration.minutes,
                 durationhours : video.duration.hours,
+                artist: video.channel.title
             }
 
             const Thumbnail = song.thumbnails.high.url
@@ -554,36 +557,54 @@ __**QUEUE LIST:**__ \n ${serverQueue.songs.map(song => `**-** ${song.title}`).jo
                 message.channel.send(NothingPlaying).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
                 return
             }
-                const Title = serverQueue.songs[0].title
-                Lyrics.find(Title, Title, function(err, resp) {
+            var videourl = await youtube.getVideo(serverQueue.songs[0].url)
+            const Music = {
+                title: Util.escapeMarkdown(videourl.title),
+                url: videourl.url,
+                thumbnails: videourl.thumbnails,
+                durationsecond : videourl.duration.seconds,
+                durationminute : videourl.duration.minutes,
+                durationhours : videourl.duration.hours,
+                artist: videourl.channel.title
+            }
+            const Lyrics = await LyricsFinder(Music.artist , serverQueue.songs[0].title)
+            
+            if(Lyrics) {
 
-                    if(!err) {
 
-                        try {
+                try {
 
-                            const Lyrics = new Discord.MessageEmbed()
-                            .setAuthor(`Lyrics For ${serverQueue.songs[0].title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-                            .setTimestamp()
-                            .setColor(RandomNumber)
-                            .setDescription(`${resp}`)
-                            message.author.send(Lyrics)
-                            return
+                    const LyricsText = new Discord.MessageEmbed()
+                    .setAuthor(`Lyrics For ${Music.title}`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                    .setTimestamp()
+                    .setColor(RandomNumber)
+                    .setDescription(Lyrics)
+                    message.author.send(LyricsText)
 
-                        } catch (error) {
-                            const ClosedDm = new Discord.MessageEmbed()
-                            .setAuthor(`Failed!!`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
-                            .setTimestamp()
-                            .setColor(RandomNumber)
-                            .setDescription(`Couldn't Send **DM** , Plz Open Your Direct Messages And Try Again!`)
-                            message.channel.send(ClosedDm).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
-                            return
-                        }
-                        
-                    } else {
-                        console.log(err)
-                        return
-                    }
-                })      
+                } catch {
+
+                    const LyricsTextNF = new Discord.MessageEmbed()
+                    .setAuthor(`DM Closed`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                    .setTimestamp()
+                    .setColor(RandomNumber)
+                    .setDescription(`Your **DM**s Are Disabled , Enabled Your Direct Messages To Receive Lyrics`)
+                    message.channel.send(LyricsTextNF).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                    return
+                }
+               
+            } else if (!Lyrics) {
+                const LyricsTextNF = new Discord.MessageEmbed()
+                .setAuthor(`No Lyrics Found`, 'https://cdn.discordapp.com/attachments/727509077441380433/773553428529414184/download.jpg')
+                .setTimestamp()
+                .setColor(RandomNumber)
+                .setDescription(`No Lyrics Found For The Current Song`)
+                message.channel.send(LyricsTextNF).then(NotJoined => NotJoined.delete({ timeout : 5000 }))
+                return
+            }
+
+
+
+                     
         }
     }
 

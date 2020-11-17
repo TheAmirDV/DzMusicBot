@@ -13,6 +13,7 @@
     "discord.js": "^12.4.1",
     "ffmpeg-static": "^4.2.7",
     "findthelyrics": "^1.0.7",
+    "lyrics-finder": "^21.4.0",
     "opusscript": "0.0.7",
     "simple-youtube-api": "^5.2.1",
     "wokcommands": "^1.0.1",
